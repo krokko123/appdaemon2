@@ -1,0 +1,24 @@
+appdaemon:
+  logfile: app.log
+  latitude: 0
+  longitude: 0
+  elevation: 30
+  time_zone: Europe/Berlin
+  plugins:
+    HASS:
+      type: hass
+      ha_url: http://10.1.1.114:8123
+      token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI2MmE5Mjc1ZDQwZGY0NGUyYmMyNzU1NDA1Yzk3ZDNmOCIsImlhdCI6MTY3NjgyODkwMSwiZXhwIjoxOTkyMTg4OTAxfQ.jGlwDA1YIdo9LGxme9e43qDlAlw18H3dWYg6MyJwetk
+http:
+  url: http://localhost:5050
+admin:
+api:
+hadashboard:
+
+#logs:
+#    main_log:
+#      filename: appdaemon.log
+#
+#    myapp:
+#      name: myapp
+#      filename: a.log

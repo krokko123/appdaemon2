@@ -1,0 +1,3 @@
+auto_light_off:
+  module: auto_light_off
+  class: AutoLightOff
