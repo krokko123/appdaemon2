@@ -48,22 +48,18 @@ class NightLight(hass.Hass):
         self.NightModeValue = self.args["NightModeValue"]
         self.NightLightSwitches = self.args["NightLightSwitches"]
         self.NightLightBulbs = self.args["NightLightBulbs"]
+        self.OffEventsFile = self.args["OffEventsFile"]
         self.LightOnBySensor = False
         self.PirSensor= self.args["PirSensor"]
         self.turn_off_ovveride()
         self.run_every(self.check_night_mode, "now", self.CheckNightTimePeriodTime)
         # self.create_helpers()
         self.listen_state(self.pir, self.PirSensor)
-        self.stop_night_mode()
 
-        self.listen_state(self.pokazywacz, "input_select.daytime")
         for switch in self.NightLightSwitches:
             self.listen_state(self.switch_listener, switch)
 
 
-    def pokazywacz(self, entity, attribute, old, new, kwargs):
-
-        self.log(f"{entity}, {attribute}, {old}, {new}, {kwargs}")
     def create_helpers(self):
         for switch in self.NightLightSwitches:
             sw_name = switch.replace(".", "_")
@@ -114,6 +110,7 @@ class NightLight(hass.Hass):
 
         if self.NightModeValue != self.get_state(self.DayPeriodSensor):
             self.log(f"{bleble}We do not Have A Nnight ! returning")
+            self.stop_night_mode()
             return
 
         if self.LightOnBySensor:
@@ -129,7 +126,6 @@ class NightLight(hass.Hass):
         entity_values = kwargs["entity_values"]
         self.turn_off(entity_name)
         self.log(f"turning off the bulb {entity_name}")
-        pass
 
     @byrna_operation_decorator("NightLightBulbs")
     def night_bulbs_on(self, *args,  **kwargs):
@@ -139,7 +135,7 @@ class NightLight(hass.Hass):
                      brightness=entity_values['brightness'],
                      rgb_color=entity_values['rgb_color'])
         self.log(f"turning off the bulb {entity_name}")
-        pass
+
 
     @byrna_operation_decorator("NightLightSwitches")
     def night_switches_on(self, *args, **kwargs):
@@ -153,35 +149,41 @@ class NightLight(hass.Hass):
             self.log("Night Switch is off... Turning on them")
             self.run_in(self.night_bulbs_off, 30)
                     # print(f"{args}   {kwargs}")
-        pass
+
+    @byrna_operation_decorator("NightLightSwitches")
+    def night_switches_off(self, *args, **kwargs):
+        entity_name = kwargs["entity_name"]
+        self.turn_off(entity_name)
+        self.log("Night Switch off")
 
     def turn_off_ovveride(self,*args, **kwargs):
         self.turn_off("input_boolean.pir_override")
         self.log("Turning off override", level="ERROR")
 
     def stop_night_mode(self):
-        self.log("wfewfewfw")
         dir_name = dirname(__file__)
-        filename = f"{dir_name}/off_events.json"
-        # self.log(filename)
-        # if not isfile(filename):
-        #
-        #     self.log("stopping night mode")
-        #     lislt = []
-        #     f = open(filename, "w").write(json.dumps([]))
-        #     f.close()
-        load =  json.loads(open(filename, "r").read())
-        # json_data = [] if not isfile(filename) else json.loads(open(filename,"r").read())
+        filename = f"{dir_name}/{self.OffEventsFile}"
+        today_date = datetime.now().strftime("%Y:%m:%d")
 
-        # with open(filename,"w") as write_file:
-        #     d = {str(datetime.now()): True}
-        # #         self.log(f"len {len(json_data)}")
-        #     json_data.append(d)
-        #     write_file.write(json.dumps(json_data,indent=4))
-        #     write_file.close()
-        #     # f.write("self")
+        if isfile(filename):
+            with open(filename,'r') as read_file:
+                json_data_read = json.loads(read_file.read())
+        else:
+            json_data_read = []
 
+        if today_date in json_data_read:
+            self.log("Event Clicked")
+            return
 
+        self.log("stopping night mode")
+        self.night_switches_on
+        data_to_dump = today_date
+        json_data_read.append(data_to_dump)
+        json_data_write = json.dumps(json_data_read,indent=4)
+
+        with open(filename, "w") as write_file:
+            write_file.write(json_data_write)
+            write_file.close()
 
     def terminate(self):
         self.log("Terminating")

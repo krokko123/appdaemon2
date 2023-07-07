@@ -8,6 +8,7 @@ night_light:
   NightBulbsOffTime: 120
   OverrideOffTime: 3600
   NightModeValue: Night
+  OffEventsFile: off_events.json
   NightLightSwitches:
     - switch.wlacznik_duzy_center
 #    - switch.wlacznik_duzy_left
