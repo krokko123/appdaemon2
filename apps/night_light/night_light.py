@@ -59,17 +59,13 @@ class NightLight(hass.Hass):
         for switch in self.NightLightSwitches:
             self.listen_state(self.switch_listener, switch)
 
-
     def create_helpers(self):
         for switch in self.NightLightSwitches:
             sw_name = switch.replace(".", "_")
             self.set_state(f"timer.{sw_name}",friendly_name=f"timer__{sw_name}",state="idle")
             self.set_state(f"input_boolean.{sw_name}",state="off", friendly_name=f"bolean_helper_{sw_name}")
-            # self.set_state(f"input_boolean.wefweewfewfewfewfwKUPA",state="off", friendly_name=f"wefewfewfewfewf{switch}")
         for bulb in self.NightLightSwitches:
             print(bulb)
-            # self.set_state(f"timer.{bulb}",friendly_name=f"timer__{switch}")
-            # self.set_state(f"input_boolean.{bulb}",state="on", friendlyname=f"fewfewfewfewf{bulb}")
 
     def pir(self, entity, attribute, old, new, kwargs):
 
@@ -80,9 +76,9 @@ class NightLight(hass.Hass):
             return
         self.log(f'{old}  {new}')
         if new == "on":
-            if self.get_state("timer.pir_override") == "active":
-                self.turn_on("input_boolean.pir_override")
-                return
+            # if self.get_state("timer.pir_override") == "active":
+            #     self.turn_on("input_boolean.pir_override")
+            #     return
             self.LightOnBySensor = True
             self.night_bulbs_on()
             self.run_in(self.night_bulbs_off, self.NightBulbsOffTime)
@@ -136,7 +132,6 @@ class NightLight(hass.Hass):
                      rgb_color=entity_values['rgb_color'])
         self.log(f"turning off the bulb {entity_name}")
 
-
     @byrna_operation_decorator("NightLightSwitches")
     def night_switches_on(self, *args, **kwargs):
         entity_name = kwargs["entity_name"]
@@ -163,7 +158,7 @@ class NightLight(hass.Hass):
     def stop_night_mode(self):
         dir_name = dirname(__file__)
         filename = f"{dir_name}/{self.OffEventsFile}"
-        today_date = datetime.now().strftime("%Y:%m:%d")
+        today_date = datetime.now().strftime("%Y-%m-%d")
 
         if isfile(filename):
             with open(filename,'r') as read_file:
@@ -172,7 +167,7 @@ class NightLight(hass.Hass):
             json_data_read = []
 
         if today_date in json_data_read:
-            self.log("Event Clicked")
+            self.log("Night mode stopped already today.... returning.")
             return
 
         self.log("stopping night mode")

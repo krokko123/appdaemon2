@@ -7,13 +7,13 @@ night_light:
   CheckNightTimePeriodTime: 600
   NightBulbsOffTime: 120
   OverrideOffTime: 3600
-  NightModeValue: Night
+  NightModeValue: Lunchtimef
   OffEventsFile: off_events.json
   NightLightSwitches:
     - switch.wlacznik_duzy_center
-#    - switch.wlacznik_duzy_left
-#    - switch.wlacznik_duzy_right
-#    - switch.wlacznik_kuchnia
+    - switch.wlacznik_duzy_left
+    - switch.wlacznik_duzy_right
+    - switch.wlacznik_kuchnia
 #    - switch.wlacznik_sypialnia_right
 #    - switch.wlacznik_sypialnia_left
   NightLightBulbs:
@@ -35,18 +35,30 @@ night_light:
           - 255
           - 174
           - 0
-#    - light.obk12c40761:
-#        brightness: 82
-#        rgb_color:
-#          - 255
-#          - 174
-#          - 0
-#    - light.obk12c3e454:
-#        brightness: 82
-#        rgb_color:
-#          - 255
-#          - 174
-#          - 0
+    - light.obk12c40761:
+        brightness: 82
+        rgb_color:
+          - 255
+          - 174
+          - 0
+    - light.obk12c3e454:
+        brightness: 82
+        rgb_color:
+          - 255
+          - 174
+          - 0
+    - light.kratka:
+        brightness: 82
+        rgb_color:
+          - 255
+          - 174
+          - 0
+    - light.sypialnia:
+        brightness: 82
+        rgb_color:
+          - 255
+          - 174
+          - 0
 #  NightLights:
 #    - switch.wlacznik_duzy_right
 #    - switch.wlacznik_sypialnia_left
