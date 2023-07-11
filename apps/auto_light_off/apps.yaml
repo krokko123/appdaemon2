@@ -1,3 +1,10 @@
 auto_light_off:
   module: auto_light_off
   class: AutoLightOff
+  NightModeValue: Lunchtime
+  DayPeriodSensor: input_select.daytime
+  Excluded_night_devices:
+    - switch.wlacznik_duzy_center
+    - light.obk12c403b3
+    - light.byrna
+    - light.byrna2

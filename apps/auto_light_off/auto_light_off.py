@@ -12,6 +12,10 @@ class AutoLightOff(hass.Hass):
         self.state_all = self.get_state()
         self.listen_state(self.byrna, "switch")
         self.listen_state(self.byrna, "light")
+        self.NightModeValue = self.args["NightModeValue"]
+        self.DayPeriodSensor = self.args["DayPeriodSensor"]
+        self.Excluded_night_devices = self.args["Excluded_night_devices"]
+
         args = self.args
         print (self.args)
 
@@ -23,14 +27,20 @@ class AutoLightOff(hass.Hass):
             self.handlers.pop(args['ent'])
 
     def byrna(self, entity, attribute, old, new, kwargs):
-
+        print(type(entity in self.Excluded_night_devices))
+        print(self.Excluded_night_devices)
+        print(self.get_state(self.DayPeriodSensor), self.NightModeValue, self.get_state(self.DayPeriodSensor) == self.NightModeValue)
+        if (self.get_state(self.DayPeriodSensor) == self.NightModeValue) \
+                and entity in self.Excluded_night_devices:
+            self.log("Device is excluded from night auto off in this script!")
+            return
+        self.log("HUJKURWA")
         if not isinstance(self.get_state(entity, attribute="entity_id"), str):
             self.log(f"Returning {entity}")
             return
 
         try:
             automation_active = self.get_state('input_boolean.szalter')
-            print (automation_active) 
             friendly_name_of_entity = self.get_state(
                 entity, attribute="friendly_name")
 
