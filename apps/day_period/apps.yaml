@@ -1,0 +1,19 @@
+day_period:
+  module: day_period
+  class: DayPeriod
+  DayPeriods:
+    Morning:
+      start: '06:00'
+      end: '08:00'
+    Noon:
+      start: '08:00'
+      end: '14:00'
+    Afternoon:
+      start: '14:00'
+      end: '18:00'
+    Evening:
+      start: '18:00'
+      end: '22:00'
+    Night:
+      start: '22:00'
+      end: '06:00'
