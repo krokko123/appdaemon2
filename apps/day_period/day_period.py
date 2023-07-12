@@ -10,13 +10,13 @@ class DayPeriod(hass.Hass):
         self.log(f"{self.__class__.__name__} Starting")
         self.handlers = {}
         self.DayPeriods = self.args["DayPeriods"]
-
+        self.run_every(self.day_period ,"now", 1)
         args = self.args
         print (self.DayPeriods)
 
-
-        self.log("Terminating")
-
+    def day_period(self,e):
+        print(datetime.now())
+        print (self.DayPeriods)
 
 
 
