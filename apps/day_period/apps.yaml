@@ -1,6 +1,7 @@
 day_period:
   module: day_period
   class: DayPeriod
+  DayPeriodSensor: input_text.dayperiod
   DayPeriods:
     Morning:
       start: '06:00'
