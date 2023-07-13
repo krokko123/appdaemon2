@@ -7,7 +7,7 @@ night_light:
   CheckNightTimePeriodTime: 600
   NightBulbsOffTime: 120
   OverrideOffTime: 3600
-  NightModeValue: Lunchtimef
+  NightModeValue: Night
   OffEventsFile: off_events.json
   NightLightSwitches:
     - switch.wlacznik_duzy_center
