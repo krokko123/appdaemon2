@@ -2,12 +2,12 @@ night_light:
 #  log: myapp
   module: night_light
   class: NightLight
-  DayPeriodSensor: input_select.daytime
+  DayPeriodSensor: input_text.dayperiod
   PirSensor: binary_sensor.pir_occupancy
   CheckNightTimePeriodTime: 600
   NightBulbsOffTime: 120
   OverrideOffTime: 3600
-  NightModeValue: Lunchtimef
+  NightModeValue: Night
   OffEventsFile: off_events.json
   NightLightSwitches:
     - switch.wlacznik_duzy_center
