@@ -49,7 +49,6 @@ class NightLight(hass.Hass):
         self.NightLightSwitches = self.args["NightLightSwitches"]
         self.NightLightBulbs = self.args["NightLightBulbs"]
         self.OffEventsFile = self.args["OffEventsFile"]
-        self.LightOnBySensor = False
         self.PirSensor= self.args["PirSensor"]
         self.turn_off_ovveride()
         self.run_every(self.check_night_mode, "now", self.CheckNightTimePeriodTime)
@@ -79,7 +78,6 @@ class NightLight(hass.Hass):
             # if self.get_state("timer.pir_override") == "active":
             #     self.turn_on("input_boolean.pir_override")
             #     return
-            self.LightOnBySensor = True
             self.night_bulbs_on()
             self.run_in(self.night_bulbs_off, self.NightBulbsOffTime)
 
@@ -107,10 +105,6 @@ class NightLight(hass.Hass):
         if self.NightModeValue != self.get_state(self.DayPeriodSensor):
             self.log(f"{bleble}We do not Have A Nnight ! returning")
             self.stop_night_mode()
-            return
-
-        if self.LightOnBySensor:
-            self.log(f"{bleble} Light is turned on by sensor! returning")
             return
 
         self.log(f"A NIGHT !!! {self.NightModeValue} {self.DayPeriodSensor}")
