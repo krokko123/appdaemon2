@@ -165,7 +165,7 @@ class NightLight(hass.Hass):
             return
 
         self.log("stopping night mode")
-        self.night_switches_on
+        self.night_switches_off
         data_to_dump = today_date
         json_data_read.append(data_to_dump)
         json_data_write = json.dumps(json_data_read,indent=4)
