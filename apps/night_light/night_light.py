@@ -8,24 +8,24 @@ from datetime import datetime
 
 
 def byrna_operation_decorator(*f):
-    def wrapper1(func, **kwargs):
-        print(f"wrapper1 {func}  {kwargs} {f}")
+    def wrapper1(func, *args, **kwargs):
+        # print(f"wrapper1 {func} {args} {kwargs} {f}")
 
         def wrapper2(*args, **kwargs):
-            print(f"wrapper2 {args}  {kwargs} {f}")
+            # print(f"wrapper2 {args}  {kwargs} {f}")
 
             obj_vars = args[0]
             entity_name = vars(obj_vars)[f[0]][0]
             is_string = isinstance(entity_name,str)
 
             iterated_object = vars(obj_vars)[f[0]]
-            print(iterated_object)
+            # print(iterated_object)
             for obj in iterated_object:
                 try:
                     bulb_entity = obj if is_string else list(obj.keys())[0]
                     bulb_values = list(obj.values())[0] if not is_string else None
                     print(f"wrapper2 {bulb_entity}")
-                    func(obj_vars, entity_name=bulb_entity, entity_values=bulb_values)
+                    func(obj_vars, *args, entity_name=bulb_entity, entity_values=bulb_values)
 
                 except Exception as e:
                     obj_vars.log(f"Exception {e}", level ="ERROR")
@@ -43,20 +43,26 @@ class NightLight(hass.Hass):
         self.state = self.get_state()
         self.NightBulbsOffTime = self.args["NightBulbsOffTime"]
         self.OverrideOffTime = self.args["OverrideOffTime"]
+        self.OverrideTimer = None
         self.DayPeriodSensor = self.args["DayPeriodSensor"]
         self.CheckNightTimePeriodTime = self.args["CheckNightTimePeriodTime"]
         self.NightModeValue = self.args["NightModeValue"]
         self.NightLightSwitches = self.args["NightLightSwitches"]
         self.NightLightBulbs = self.args["NightLightBulbs"]
         self.OffEventsFile = self.args["OffEventsFile"]
+        self.LightOnBySensor = False
         self.PirSensor= self.args["PirSensor"]
-        self.turn_off_ovveride()
+        self.turn_off_override()
         self.run_every(self.check_night_mode, "now", self.CheckNightTimePeriodTime)
+        self.run_every(self.override_watcher, "now", 300)
         # self.create_helpers()
         self.listen_state(self.pir, self.PirSensor)
 
         for switch in self.NightLightSwitches:
             self.listen_state(self.switch_listener, switch)
+
+    def override_watcher(self, a):
+        self.log(f"Override timer state {self.timer_running(self.OverrideTimer)}")
 
     def create_helpers(self):
         for switch in self.NightLightSwitches:
@@ -78,8 +84,10 @@ class NightLight(hass.Hass):
             # if self.get_state("timer.pir_override") == "active":
             #     self.turn_on("input_boolean.pir_override")
             #     return
+            self.LightOnBySensor = True
+            self.log("Adding PIR sensor lock")
             self.night_bulbs_on()
-            self.run_in(self.night_bulbs_off, self.NightBulbsOffTime)
+            self.run_in(self.night_bulbs_off, self.NightBulbsOffTime, by_sensor=True)
 
     def switch_listener(self, entity, attribute, old, new, kwargs):
         if self.NightModeValue != self.get_state(self.DayPeriodSensor):
@@ -90,7 +98,7 @@ class NightLight(hass.Hass):
 
             if timer_state == "active":
                 self.turn_on("input_boolean.pir_override")
-                self.run_in(self.turn_off_ovveride, self.OverrideOffTime)
+                self.OverrideTimer = self.run_in(self.turn_off_override, self.OverrideOffTime)
                 self.log(f"Overridding pir for {self.OverrideOffTime} seconds")
         if new == "off":
             self.get_entity("timer.pir_override").call_service("start")
@@ -107,15 +115,24 @@ class NightLight(hass.Hass):
             self.stop_night_mode()
             return
 
+        if self.LightOnBySensor:
+            self.log(f"{bleble} Light is turned on by sensor! returning")
+            return
+
         self.log(f"A NIGHT !!! {self.NightModeValue} {self.DayPeriodSensor}")
         self.night_switches_on()
 
     @byrna_operation_decorator("NightLightBulbs")
     def night_bulbs_off(self, *args,  **kwargs):
-        entity_name = kwargs["entity_name"]
+        by_sensor = None if len(args) == 1 else args[1].get("by_sensor")
+        entity_name = kwargs.get("entity_name")
         entity_values = kwargs["entity_values"]
         self.turn_off(entity_name)
         self.log(f"turning off the bulb {entity_name}")
+
+        if by_sensor:
+            self.log("Removing sensor lock")
+            self.LightOnBySensor = False
 
     @byrna_operation_decorator("NightLightBulbs")
     def night_bulbs_on(self, *args,  **kwargs):
@@ -124,6 +141,7 @@ class NightLight(hass.Hass):
         self.turn_on(entity_name,
                      brightness=entity_values['brightness'],
                      rgb_color=entity_values['rgb_color'])
+
         self.log(f"turning off the bulb {entity_name}")
 
     @byrna_operation_decorator("NightLightSwitches")
@@ -145,7 +163,7 @@ class NightLight(hass.Hass):
         self.turn_off(entity_name)
         self.log("Night Switch off")
 
-    def turn_off_ovveride(self,*args, **kwargs):
+    def turn_off_override(self, *args, **kwargs):
         self.turn_off("input_boolean.pir_override")
         self.log("Turning off override", level="ERROR")
 
@@ -165,7 +183,7 @@ class NightLight(hass.Hass):
             return
 
         self.log("stopping night mode")
-        self.night_switches_off
+        self.night_switches_off()
         data_to_dump = today_date
         json_data_read.append(data_to_dump)
         json_data_write = json.dumps(json_data_read,indent=4)
