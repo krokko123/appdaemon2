@@ -1,5 +1,5 @@
 night_light:
-#  log: myapp
+  log: night_light 
   module: night_light
   class: NightLight
   DayPeriodSensor: input_text.dayperiod
