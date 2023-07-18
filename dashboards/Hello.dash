@@ -10,5 +10,77 @@ label:
     widget_type: label
     text: Hello Worldergerger
 
+day_period:
+    widget_type: sensor
+    entity: input_text.dayperiod
+    title: dayperiod
+
+testlight2:
+    widget_type: light
+    entity: light.byrna
+    title: byrna
+    on_attributes:
+        brightness: 100
+        color_temp: 250
+
+
+Przedpokoj:
+    widget_type: switch
+    entity: switch.wlacznik_duzy_center
+    title: Przedpokoj
+
+Lazienka:
+    widget_type: switch
+    entity: switch.wlacznik_duzy_left
+    title: lazienka
+
+Patyk:
+    widget_type: switch
+    entity: switch.wlacznik_sypialnia_left
+    title: Patyk
+
+Kratka:
+    widget_type: switch
+    entity: switch.wlacznik_sypialnia_right
+    title: Kratka
+
+Kuchnia:
+    widget_type: switch
+    entity: switch.wlacznik_kuchnia
+    title: Kuchnia
+select:
+    widget_type: input_boolean
+    entity: input_boolean.pir_override
+    title: PIR OVERRIDE
+
+pir:
+       widget_type: sensor
+       entity: binary_sensor.pir_occupancy
+       title: PIR
+
+auto_off:
+    widget_type: input_boolean
+    entity: input_boolean.szalter
+    title: AUTO LIGHT LOFF
+
+auto_off_timer_global:
+    widget_type: input_text
+    entity: input_number.timerek
+    title: Timek Global
+
+auto_off_timer_patyk:
+    widget_type: input_text
+    entity: input_number.timerek_patyk
+    title: Timek Patyk
+
+auto_off_timer_kuchnia:
+    widget_type: input_text
+    entity: input_number.timerek_wlacznik_kuchnia
+    title: Timek Kuchnia
+
 layout:
-    - label(2x2)
+
+    - day_period(3x1)
+    - Przedpokoj(1x1), Lazienka(1x1), Patyk(1x1), Kratka(1x1), Kuchnia(1x1)
+    - select(1x1), pir(1x1)
+    - auto_off, auto_off_timer_global, auto_off_timer_patyk, auto_off_timer_kuchnia
