@@ -1,0 +1,70 @@
+night_light:
+  hehe: zajebiscie_nowy_ficzer
+  log: night_light 
+  module: night_light
+  class: NightLight
+  DayPeriodSensor: input_text.dayperiod
+  PirSensor: binary_sensor.pir_occupancy
+  CheckNightTimePeriodTime: 600
+  NightBulbsOffTime: 120
+  OverrideOffTime: 3600
+  NightModeValue: Night
+  OffEventsFile: off_events.json
+  NightLightSwitches:
+    - switch.wlacznik_duzy_center
+#    - switch.wlacznik_duzy_left
+#    - switch.wlacznik_duzy_right
+#    - switch.wlacznik_kuchnia
+#    - switch.wlacznik_sypialnia_right
+#    - switch.wlacznik_sypialnia_left
+  NightLightBulbs:
+    - light.obk12c403b3:
+        brightness: 82
+        rgb_color:
+          - 255
+          - 174
+          - 0
+    - light.byrna:
+        brightness: 82
+        rgb_color:
+          - 255
+          - 174
+          - 0
+    - light.byrna2:
+        brightness: 82
+        rgb_color:
+          - 255
+          - 174
+          - 0
+#    - light.obk12c40761:
+#        brightness: 82
+#        rgb_color:
+#          - 255
+#          - 174
+#          - 0
+#    - light.obk12c3e454:
+#        brightness: 82
+#        rgb_color:
+#          - 255
+#          - 174
+#          - 0
+#    - light.kratka:
+#        brightness: 82
+#        rgb_color:
+#          - 255
+#          - 174
+#          - 0
+#    - light.sypialnia:
+#        brightness: 82
+#        rgb_color:
+#          - 255
+#          - 174
+#          - 0
+#  NightLights:
+#    - switch.wlacznik_duzy_right
+#    - switch.wlacznik_sypialnia_left
+#    - switch.wlacznik_sypialnia_right
+#    - switch.wlacznik_kuchnia
+#    - light.sypialnia
+#    - light.kratka
+
