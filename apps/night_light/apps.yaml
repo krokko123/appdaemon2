@@ -1,5 +1,4 @@
 night_light:
-  hehe: zajebiscie_nowy_ficzer
   log: night_light 
   module: night_light
   class: NightLight
