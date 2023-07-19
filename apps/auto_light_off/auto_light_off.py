@@ -39,7 +39,6 @@ class AutoLightOff(hass.Hass):
                 and entity in self.Excluded_night_devices:
             self.log("Device is excluded from night auto off in this script!")
             return
-        self.log("HUJKURWA")
         if not isinstance(self.get_state(entity, attribute="entity_id"), str):
             self.log(f"Returning {entity}")
             return
