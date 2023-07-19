@@ -10,11 +10,16 @@ class AutoLightOff(hass.Hass):
         self.log(f"{self.__class__.__name__} Starting")
         self.handlers = {}
         self.state_all = self.get_state()
-        self.listen_state(self.byrna, "switch")
-        self.listen_state(self.byrna, "light")
+        # self.listen_state(self.byrna, "switch")
+        # self.listen_state(self.byrna, "light")
         self.NightModeValue = self.args["NightModeValue"]
         self.DayPeriodSensor = self.args["DayPeriodSensor"]
+        self.Watched_devices = self.args["Watched_devices"]
         self.Excluded_night_devices = self.args["Excluded_night_devices"]
+
+        for ent in self.Watched_devices:
+            self.listen_state(self.byrna, ent)
+            self.log(f"Adding {ent} to watch.")
 
         args = self.args
         print (self.args)
