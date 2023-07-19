@@ -16,6 +16,7 @@ class AutoLightOff(hass.Hass):
         self.DayPeriodSensor = self.args["DayPeriodSensor"]
         self.Watched_devices = self.args["Watched_devices"]
         self.Excluded_night_devices = self.args["Excluded_night_devices"]
+        self.AppDetails = self.args["AppDetails"]
 
         for ent in self.Watched_devices:
             self.listen_state(self.byrna, ent)
@@ -23,7 +24,7 @@ class AutoLightOff(hass.Hass):
 
         args = self.args
         print (self.args)
-
+        print(self.AppDetails)
     def auto_byrna_off(self, args):
         self.log(f"runned in delay  ---{args['ent']}")
         if args['ent'] != "switch.alles":
