@@ -4,12 +4,12 @@ auto_light_off:
   NightModeValue: Night
   DayPeriodSensor: input_text.dayperiod
   AppDetails:
-    ids:
+     ids:
       - Auto light off APP
-    name: : Timer for automatically of lights
-    sw: 21.3.7
-    mf: Seb Design
-    mdl:
+     name: Timerights
+     sw: 21.3.7
+     mf: Seb Design
+     mdl: r
   Watched_devices:
     - switch.wlacznik_sypialnia_right
     - switch.wlacznik_sypialnia_left

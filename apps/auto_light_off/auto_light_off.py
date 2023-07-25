@@ -3,13 +3,14 @@ import time
 import json
 from pprint import pprint
 from datetime import datetime
-
+from appdaemon.plugins.mqtt.mqttapi import Mqtt as mqtt
 class AutoLightOff(hass.Hass):
 
     def initialize(self):
         self.log(f"{self.__class__.__name__} Starting")
         self.handlers = {}
         self.state_all = self.get_state()
+        mqtt.mqtt_publish(self, topic="homeassistant/ktktkt",payload="KUUUUPAAA22222222")
         # self.listen_state(self.byrna, "switch")
         # self.listen_state(self.byrna, "light")
         self.NightModeValue = self.args["NightModeValue"]
@@ -23,8 +24,74 @@ class AutoLightOff(hass.Hass):
             self.log(f"Adding {ent} to watch.")
 
         args = self.args
-        print (self.args)
-        print(self.AppDetails)
+        # print (self.args)
+        states = self.get_state("switch")
+        
+        for ent in states.values():
+            friendly_name_of_entity = ent.get("attributes").get("friendly_name")
+#            friendly_name_of_entity = "ent"
+            ent_id = ent['entity_id']#.replace(".","xx")
+            ent_data = {"command_topic": f"{ent_id}",
+                        "state_topic": f"{ent_id}/set",
+                        "mode": "box",
+                        "unique_id": f"kurwa_{ent_id}_idd",
+                        "name": f"{friendly_name_of_entity}",
+                        "friendly_name":"2137"
+                        }
+
+            post_data = {}
+            post_data.update({"dev":self.AppDetails})
+            post_data.update(ent_data)
+            print (json.dumps(post_data,indent=4))
+            tt = f"homeassistant/switch/{ent['entity_id']}/config".replace(".","")
+            print (tt)
+            mqtt.mqtt_publish(self, topic=tt, payload=json.dumps(post_data))
+
+            ent_data = {"command_topic": f"{ent_id}",
+                        "state_topic": f"{ent_id}/set",
+                        "availability_topic": f"{ent_id}/av",
+                        "unique_id": f"kurfrrwa_{ent_id}_idd",
+                        "name": f"{friendly_name_of_entity}",
+                        # "friendly_name": "2137"
+                        }
+            post_data = {}
+            post_data.update({"dev":self.AppDetails})
+            post_data.update(ent_data)
+            print (json.dumps(post_data,indent=4))
+            tt = f"homeassistant/number/kupa/{ent['entity_id']}/config".replace(".","xx")
+            print (tt.format(typee="wefwwfew"))
+            mqtt.mqtt_publish(self, topic=tt, payload=json.dumps(post_data))
+
+            ent_data = {"command_topic": f"{ent_id}",
+                        "state_topic": f"{ent_id}/set",
+                        "availability_topic": f"{ent_id}/av",
+                        "unique_id": f"kurfrrwa_{ent_id}_idd",
+                        "name": f"{friendly_name_of_entity}",
+                        # "friendly_name": "2137"
+                        }
+            post_data = {}
+            post_data.update({"dev":self.AppDetails})
+            post_data.update(ent_data)
+            print (json.dumps(post_data,indent=4))
+            tt = f"homeassistant/sensor/Eeee{ent['entity_id']}".replace(".","xx")
+            print (tt.format(typee="wefwwfew"))
+            mqtt.mqtt_publish(self, topic=f"{tt}/config", payload=json.dumps(post_data))
+
+            ent_data = {"command_topic": f"{tt}/cmnd",
+                        "state_topic": f"{tt}/set",
+                        "availability_topic": f"{tt}/av",
+                        "unique_id": f"kurfrrwa_{ent_id}_idd",
+                        "name": f"{friendly_name_of_entity}",
+                        # "friendly_name": "2137"
+                        }
+            post_data = {}
+            post_data.update({"dev":self.AppDetails})
+            post_data.update(ent_data)
+            print (json.dumps(post_data,indent=4))
+            tt = f"homeassistant/button/Eeee{ent['entity_id']}/config".replace(".","xx")
+            print (tt.format(typee="wefwwfew"))
+            mqtt.mqtt_publish(self, topic=tt, payload=json.dumps(post_data))
+
     def auto_byrna_off(self, args):
         self.log(f"runned in delay  ---{args['ent']}")
         if args['ent'] != "switch.alles":
