@@ -101,6 +101,10 @@ class NightLight(hass.Hass):
                 self.OverrideTimer = self.run_in(self.turn_off_override, self.OverrideOffTime)
                 self.log(f"Overridding pir for {self.OverrideOffTime} seconds")
         if new == "off":
+            override_state = self.get_state("input_boolean.pir_override")
+            if override_state == "on":
+                self.turn_off_override()
+                self.log("Turning off override after off ligth by switch.")
             self.get_entity("timer.pir_override").call_service("start")
 
     def check_night_mode(self, bleble):
@@ -124,6 +128,12 @@ class NightLight(hass.Hass):
 
     @byrna_operation_decorator("NightLightBulbs")
     def night_bulbs_off(self, *args,  **kwargs):
+        override_state = self.get_state("input_boolean.pir_override")
+        if override_state == "on":
+            self.log(f"PIR is overrided, returning from off")
+            # self.run_in(self.night_bulbs_off, self.NightBulbsOffTime, by_sensor=True)
+            return
+
         by_sensor = None if len(args) == 1 else args[1].get("by_sensor")
         entity_name = kwargs.get("entity_name")
         entity_values = kwargs["entity_values"]
@@ -154,7 +164,7 @@ class NightLight(hass.Hass):
         if ent_state == "off":
             self.turn_on(entity_name)
             self.log("Night Switch is off... Turning on them")
-            self.run_in(self.night_bulbs_off, 30)
+            self.run_in(self.night_bulbs_off, 60)
                     # print(f"{args}   {kwargs}")
 
     @byrna_operation_decorator("NightLightSwitches")
