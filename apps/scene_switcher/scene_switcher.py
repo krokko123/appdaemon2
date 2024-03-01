@@ -16,11 +16,29 @@ class SceneSwitcher(hass.Hass):
         self.SwitchCommands = self.args["SwitchCommands"]
 
         self.listen_state(self.switch_scene, self.SwitchSensor)
-
+        print(self.SwitchCommands)
+        print(self.SwitchCommands.get("1_hold"))
     def switch_scene(self, entity, attribute, old, new, kwargs):
-        print(new,entity)
+        # print(new,entity)
         if entity is not None:
-            ent_to_switch = self.SwitchCommands.get(new)
-            if ent_to_switch is not None:
-                self.toggle(ent_to_switch)
-                self.log(f"Toggling {ent_to_switch}")
+            commands = self.SwitchCommands.get(new)
+            # print(commands)
+            if commands is not None:
+                # print(commands)
+                for command,switch in commands.items():
+                    if command == "Toggle":
+                        for action in switch:
+                            self.toggle(action)
+                            self.log(f"Toggling {action}")
+                    if command == "SwitchOn":
+                        # print(switch)
+                        for action in switch:
+                            self.turn_on(action)
+                            self.log(f"Switching on {action}")
+                    if command == "SwitchOff":
+                        for action in switch:
+                            self.turn_off(action)
+                            self.log(f"Switching off {action}")
+
+            # if ent_to_switch is not None:
+            #     self.toggle(ent_to_switch)
