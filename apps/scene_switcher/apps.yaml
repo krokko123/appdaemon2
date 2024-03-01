@@ -1,0 +1,13 @@
+scene_switcher:
+  module: scene_switcher
+  class: SceneSwitcher
+  SwitchSensor: sensor.szalterek_szalterek_action
+  SwitchCommands:
+    1_single: switch.wlacznik_sypialnia_left
+    2_single: switch.wlacznik_sypialnia_right
+    3_single: light.sypialnia
+    4_single: switch.wlacznik_kuchnia
+    1_double: switch.wlacznik_duzy_center
+    2_double: switch.wlacznik_duzy_left
+    3_double:
+    4_double:
