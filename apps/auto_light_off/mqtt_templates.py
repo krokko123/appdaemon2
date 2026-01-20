@@ -127,7 +127,7 @@ class mqtt_templates():
     #prepare_mqtt_payload(template=T_NUMBER)
 
 
-mqt = mqtt_templates('yyy')
+mqt = mqtt_templates('yyyy')
 print(type(mqt))
 
 mqt.register_mqtt_switches({'app_name':"eddede","ent_id":"werfwefr"})
