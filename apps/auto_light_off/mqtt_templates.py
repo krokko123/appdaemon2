@@ -2,7 +2,7 @@ import json
 import copy
 import functools
 import templates as t
-
+from inspect import signature
 # if __name__ == "__main__":
     # print(json.dumps(T_NUMBER))
 
@@ -35,6 +35,10 @@ class mqtt_templates():
             def wrapper(*args, **kwargs):
                 # print(f"ARGS={args},KWARGS={kwargs}")
 
+                sig = signature(func)
+                print ("----------sig-----------")
+                print (sig)
+                print ("----------sig-----------")
                 # print(func(*args))
                 dataa_cpy = func(*args)
 
@@ -51,19 +55,22 @@ class mqtt_templates():
                 # # print(json.dumps(template,indent=4),json.dumps(template_data,indent=4))
                 # print(template_data)
                 for key, param in template_data.items():
+                    if key in dataa_cpy:
                     # pass
                 #     # print (param.format(**data))
                 #     # print(dataa_cpy[param])
-                    if isinstance(template_data[key], str):
-                        formatted_data[key] = param.format(**res_params)
-                    elif isinstance(template_data[key], dict):
-                        print("sssssssssssssssssssssS",dataa_cpy[key])
+                        print (key)
+                        if isinstance(template_data[key], str):
+                            formatted_data[key] = param.format(**res_params)
+                        elif isinstance(template_data[key], dict):
+                            print("sssssssssssssssssssssS",dataa_cpy[key])
                         # formatted_data[key] = dataa_cpy[key]
                 #     # if key == 'unique_id':
                 #             # print (dataa_cpy[key],key, param)
                             #if key in dataa_cpy:
                             #print('freferref')
-
+                    else:
+                        print(f"nie ma {key}")
                     # print(dataa_cpy,key,param)
                 # print(json.dumps(template,indent=4))
                 # print(json.dumps(dataa,indent=4))
@@ -105,7 +112,7 @@ class mqtt_templates():
         return data
 
     @prepare_mqtt_payload(template=t.T_SWITCH)
-    def register_mqtt_switches(self, data):
+    def register_mqtt_switches(self, data,efefe="wefefwwef"):
         # print(data)
         # print(obj)
 
@@ -127,7 +134,8 @@ class mqtt_templates():
     #prepare_mqtt_payload(template=T_NUMBER)
 
 
-mqt = mqtt_templates('yyyy')
-print(type(mqt))
 
-mqt.register_mqtt_switches({'app_name':"eddede","ent_id":"werfwefr"})
+if __name__ == "__main__":
+    mqt = mqtt_templates('yyyy')
+    print(type(mqt))
+    mqt.register_mqtt_switches({'app_name':"eddede","ent_id":"werfwefr"})
