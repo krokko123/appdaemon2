@@ -3,11 +3,13 @@ import copy
 import functools
 import templates as t
 from inspect import signature
+
+
 # if __name__ == "__main__":
-    # print(json.dumps(T_NUMBER))
+# print(json.dumps(T_NUMBER))
 
 class mqtt_templates():
-    def __init__(self,hass_object):
+    def __init__(self, hass_object):
         self.hass_object = hass_object
         # print(self.hass_object)
 
@@ -24,10 +26,13 @@ class mqtt_templates():
             res_params[key] = data[param] if param in data else "Empty"
             # else:
             #     obj.log(f"No {param} in data dictionary for Mqtt payload",level="WARNING")
+        res_params['additional'] = [{k[6:],v} for k,v in data.items() if k.startswith("param_")]
         return res_params
+
     @staticmethod
-    def send_mqtt(self,data):
+    def send_mqtt(self, data):
         self.hass_object.mqtt.mqqt_publish()
+
     def prepare_mqtt_payload(template):
 
         def prepare_mqtt_payload_wrapper(func):
@@ -36,11 +41,20 @@ class mqtt_templates():
                 # print(f"ARGS={args},KWARGS={kwargs}")
 
                 sig = signature(func)
-                print ("----------sig-----------")
-                print (sig)
-                print ("----------sig-----------")
+                bind_parameters = sig.bind(*args, **kwargs)
+                print("----------sig-----------")
+                print(sig)
+                print("----------sig-----------")
                 # print(func(*args))
+
                 dataa_cpy = func(*args)
+                for param, data in sig.parameters.items():
+                    print(param, data.default)
+
+                for param, data in bind_parameters.kwargs.items():
+                    if param.startswith("param_"):
+                        dataa_cpy[param] = data
+                        # print("-------------",param, data)
 
                 cpy_template = copy.deepcopy(template)
                 res_params = mqtt_templates.prepare_params(template=cpy_template,
@@ -56,21 +70,21 @@ class mqtt_templates():
                 # print(template_data)
                 for key, param in template_data.items():
                     if key in dataa_cpy:
-                    # pass
-                #     # print (param.format(**data))
-                #     # print(dataa_cpy[param])
-                        print (key)
+                        # pass
+                        #     # print (param.format(**data))
+                        #     # print(dataa_cpy[param])
+                        print(key)
                         if isinstance(template_data[key], str):
                             formatted_data[key] = param.format(**res_params)
                         elif isinstance(template_data[key], dict):
-                            print("sssssssssssssssssssssS",dataa_cpy[key])
+                            print("sssssssssssssssssssssS", dataa_cpy[key])
                         # formatted_data[key] = dataa_cpy[key]
-                #     # if key == 'unique_id':
-                #             # print (dataa_cpy[key],key, param)
-                            #if key in dataa_cpy:
-                            #print('freferref')
-                    else:
-                        print(f"nie ma {key}")
+                    #     # if key == 'unique_id':
+                    #             # print (dataa_cpy[key],key, param)
+                    # if key in dataa_cpy:
+                    # print('freferref')
+                    # else:
+                    #     print(f"nie ma {key}")
                     # print(dataa_cpy,key,param)
                 # print(json.dumps(template,indent=4))
                 # print(json.dumps(dataa,indent=4))
@@ -78,25 +92,25 @@ class mqtt_templates():
                 # print(json.dumps(template_data,indent=4))
                 # print(json.dumps(template_topic,indent=4))
                 mqtt_data['data'] = formatted_data
-                print(json.dumps(mqtt_data,indent=4))
+                # print(json.dumps(mqtt_data, indent=4))
 
             return wrapper
 
         return prepare_mqtt_payload_wrapper
 
-            # template["topic"] = template.get("topic").format(**data)
-            #
-            # env_data = T_NUMBER.get("data", {})
-            # for key,env in env_data.items():
-            #     env_data[key] = env.format(**data)
-            #
-            # T_NUMBER["data"]["dev"] = dev
-            #
-            # print(T_NUMBER['topic'])
-            # print(json.dumps(T_NUMBER['data'],indent=5))
+        # template["topic"] = template.get("topic").format(**data)
+        #
+        # env_data = T_NUMBER.get("data", {})
+        # for key,env in env_data.items():
+        #     env_data[key] = env.format(**data)
+        #
+        # T_NUMBER["data"]["dev"] = dev
+        #
+        # print(T_NUMBER['topic'])
+        # print(json.dumps(T_NUMBER['data'],indent=5))
 
     @prepare_mqtt_payload(template=t.T_SENSOR)
-    def register_mqtt_sensors(self, data):
+    def register_mqtt_sensors(self, data, erfer="referfref"):
         # print(data)
         # print(obj)
 
@@ -112,7 +126,7 @@ class mqtt_templates():
         return data
 
     @prepare_mqtt_payload(template=t.T_SWITCH)
-    def register_mqtt_switches(self, data,efefe="wefefwwef"):
+    def register_mqtt_switches(self, data, **kwargs):
         # print(data)
         # print(obj)
 
@@ -129,13 +143,15 @@ class mqtt_templates():
 
     # mqtt.mqtt_publish(topic="tt", payload="ww")
 
-    #print(blebleble())
+    # print(blebleble())
 
-    #prepare_mqtt_payload(template=T_NUMBER)
-
+    # prepare_mqtt_payload(template=T_NUMBER)
 
 
 if __name__ == "__main__":
     mqt = mqtt_templates('yyyy')
     print(type(mqt))
-    mqt.register_mqtt_switches({'app_name':"eddede","ent_id":"werfwefr"})
+    mqt.register_mqtt_switches({'app_name': "eddede", "ent_id": "werfwefr"},
+                               param_topic="rferferef",
+                               param_dev="rfrefref",
+                               chuja_dev="ewfefwefw")
