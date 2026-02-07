@@ -2,6 +2,7 @@ import json
 import copy
 import functools
 import templates as t
+import re
 from inspect import signature
 
 
@@ -65,20 +66,25 @@ class mqtt_templates():
                                                            obj=args[0].hass_object)
                 # print (f'RES PARAMS {res_params} ')
                 mqtt_data = dict()
+                res_params['topics_prefix'] = cpy_template.get('topics_prefix').format(**res_params)
                 mqtt_data['topic'] = cpy_template.get('topic').format(**res_params)
                 template_data = cpy_template.get('data')
+                print(template_data)
                 # print(res_params)
 
                 formatted_data = dict()
                 # # print(json.dumps(template,indent=4),json.dumps(template_data,indent=4))
                 # print(template_data)
                 for key, param in template_data.items():
+
                     # if key in res_params:
                     #         # pass
                     #         #     # print (param.format(**data))
                     #         #     # print(dataa_cpy[param])
                     #         print(key)
                     if isinstance(template_data[key], str):
+                        escaped_param = re.sub('\{(.*)\}\/?(.*)', '\\1', param)
+                        print ("escaped", escaped_param, "---------", param)
                         try:
                             formatted_data[key] = param.format(**res_params)
                         except KeyError as e:
@@ -172,12 +178,12 @@ if __name__ == "__main__":
 
     ret_data = mqt.register_mqtt_switches(ent_id="ihtrhrthrthrthrtd",
                                           friendly_name="f_name",
-                                          dev= {"devv":"egrergger"})
+                                          dev= {"devv":"egrergger","name":"Timerighrs"})
     mqtt_send_data.append(ret_data)
 
-    ret_data = mqt.register_mqtt_switches(ent_id="ihtrhrthrthrthrtd",
-                                          friendly_name="f_name")
-    mqtt_send_data.append(ret_data)
+    # ret_data = mqt.register_mqtt_switches(ent_id="ihtrhrthrthrthrtd",
+    #                                       friendly_name="f_name")
+    # mqtt_send_data.append(ret_data)
 
 
 

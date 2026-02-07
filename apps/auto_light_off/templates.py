@@ -31,7 +31,8 @@ T_NUMBER = {
 }
 
 T_SENSOR = {
-    "topic":"homeassistant/sensor/{app_name}/{ent_id}/config",
+    "topic":"{topics_prefix}/config",
+    "topics_prefix" "homeassistant/sensor/{app_name}/{ent_id}"
     "params":{
         "app_name": "app_name",
         "ent_id": "ent_id",
@@ -54,7 +55,8 @@ T_SENSOR = {
     }
 }
 T_SWITCH = {
-    "topic":"homeassistant/switch/{app_name}/{ent_id}/config",
+    "topic":"{topics_prefix}/config",
+    "topics_prefix": "homeassistant/switch/{app_name}/{ent_id}",
     "params":{
         "app_name": "app_name",
         "ent_id": "ent_id",
@@ -64,9 +66,9 @@ T_SWITCH = {
         "dev":"dev"
      },
     "data":{
-         "command_topic": "{st_topic}",
-         "state_topic": "{st_topic}/set",
-         "availability_topic": "{st_topic}/av",
+         "command_topic": "{topics_prefix}",
+         "state_topic": "{topics_prefix}/set",
+         "availability_topic": "{topics_prefix}/av",
          "mode": "box",
          "unique_id": "{ent_id}",
          "name": "{friendly_name_of_entity}",
