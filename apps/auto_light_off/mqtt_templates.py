@@ -26,7 +26,6 @@ class mqtt_templates():
             res_params[key] = data[param] if param in data else "Empty"
             # else:
             #     obj.log(f"No {param} in data dictionary for Mqtt payload",level="WARNING")
-        res_params['st_topic'] = 'fessefseffdssesefsef'
 
         res_params['additional'] = [{k[6:], v} for k, v in data.items() if k.startswith("param_")]
         return res_params
@@ -86,9 +85,9 @@ class mqtt_templates():
                             formatted_data[key] = "Exception"
                             print (f"nie ma chuja {Exception} {key}  {param}")
 
-                    # elif isinstance(template_data[key], dict):
+                    elif isinstance(template_data[key], dict):
                     #     print("sssssssssssssssssssssS", dataa_cpy[key])
-                    # formatted_data[key] = dataa_cpy[key]
+                        formatted_data[key] = res_params[key]
                 #     # if key == 'unique_id':
                 #             # print (dataa_cpy[key],key, param)
                 # if key in dataa_cpy:
@@ -172,7 +171,8 @@ if __name__ == "__main__":
     mqtt_send_data = []
 
     ret_data = mqt.register_mqtt_switches(ent_id="ihtrhrthrthrthrtd",
-                                          friendly_name="f_name")
+                                          friendly_name="f_name",
+                                          dev= {"devv":"egrergger"})
     mqtt_send_data.append(ret_data)
 
     ret_data = mqt.register_mqtt_switches(ent_id="ihtrhrthrthrthrtd",
